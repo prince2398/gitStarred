@@ -1,6 +1,6 @@
 # GitStarred
 
-### Most Starred repositories from GitHub created in last 30 days.
+### Mst Starred repositories from GitHub created in last 30 days.
 
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.3.
