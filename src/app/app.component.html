@@ -60,7 +60,22 @@
         
         </div>
       </div>
-
+      <div 
+        class="alert alert-danger" 
+        role="alert" 
+        style="text-align: center;"
+        *ngIf="requestLimitReached"  
+      >
+      Wohh! Wohh! Wohh! Slow down man. We're out of resources. Wait for a minute then refresh page and scroll slowly.
+      </div>
+      <div 
+        class="alert alert-danger" 
+        role="alert" 
+        style="text-align: center;"
+        *ngIf="noMoreRepos"  
+      >
+        You're all caught up!. No more repos left.
+      </div>
       <div class="row pb-5">
         <div class="col-md-12 p-5">
           <ngx-spinner

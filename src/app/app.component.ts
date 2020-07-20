@@ -16,6 +16,8 @@ export class AppComponent implements OnInit {
   nextPage;
   lastPage;
   repos = [];
+  requestLimitReached = false;
+  noMoreRepos=false;
 
   constructor(
     private http:HttpClient, 
@@ -50,6 +52,7 @@ export class AppComponent implements OnInit {
             }
           },
           err=>{
+            this.requestLimitReached = true;
             console.log(err);
             reject();
           }
@@ -58,24 +61,28 @@ export class AppComponent implements OnInit {
   }
   
   loadNextPage(){
-    
-    if(this.nextPage){
-      // console.log(this.nextPage)
+    if(this.nextPage && !this.noMoreRepos){
       this.http.get(this.nextPage,{ observe: "response"})
         .subscribe(
           resp =>{
             if(resp.status == 200){
-              // console.log(resp)
               this.appendRepos(resp.body["items"]);
               this.updateLinks(resp.headers.get("link"))
+              if(this.nextPage == this.lastPage){
+                this.noMoreRepos = true;
+                this.spinner.hide()
+              }
             }
           },
           err=>{
+            this.requestLimitReached = true;
+            this.spinner.hide()
             console.log(err);
           }
         )
     }
   }
+
   updateLinks(links){
     links.split(',').forEach( link =>{
       if(link.split(";")[1] == ' rel="next"'){
@@ -86,6 +93,7 @@ export class AppComponent implements OnInit {
       }
     })
   } 
+
   appendRepos(items){
     items.forEach(item=>{
       let repo ={};
@@ -100,15 +108,15 @@ export class AppComponent implements OnInit {
       repo["ownerProfile"] = item["owner"]["html_url"];
       
       this.repos.push(repo);
-      // console.log(repo);
     })
   }
+
   onScroll(){
-    // this.repos.push(this.repos[this.repos.length-1] +1)
-    // console.log(this.repos)
-    // console.log(this.nextPage);
-    // console.log(this.lastPage);
-    this.loadNextPage();
-    this.spinner.show();
+    if(!this.requestLimitReached && !this.noMoreRepos){
+      this.loadNextPage();
+      this.spinner.show();
+    }else{
+      this.spinner.hide();
+    }
   }
 }
