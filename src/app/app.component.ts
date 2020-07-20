@@ -12,7 +12,6 @@ export class AppComponent implements OnInit {
   url = "https://api.github.com/search/repositories"
   date = new Date();
   query = "sort:>0 created:>";
-  page = 1;
   nextPage;
   lastPage;
   repos = [];
@@ -38,7 +37,7 @@ export class AppComponent implements OnInit {
       this.query = this.query + this.datepipe.transform(this.date, 'yyyy-MM-dd');
       let params = { q: this.query,
                       sort: "stars",
-                      per_page: "5",
+                      per_page: "10",
                       page: "1"
       }
       // getting initial repos

@@ -6,7 +6,16 @@
   <title>Document</title>
   <style>
     body{
+      height: 100%;
       background-color: #3E4551;
+    }
+    .list-group{
+      padding-top: 100px;
+    }
+    @media screen and (max-width: 677px) {
+      .list-group{
+        padding-top: 190px;
+      }
     }
     a{
       text-decoration:none; 
@@ -15,12 +24,21 @@
     img{
       max-height: 200px;
     }
+    p{
+      padding-top:10px;
+    }
   </style>
 </head>
 <body>
+  <!-- Header -->
+  <div class="navbar fixed-top navbar-light bg-light">
+      <h5 class="navbar-brand">Most Stargazed Github Repos with Infinite Scrolling</h5>
+      <p>Made with &#10084; by PP</p>
+  </div>
+
   <div class="container">
     <div class="list-group" >
-
+      
       <div
         class="search-results"
         infiniteScroll
@@ -74,6 +92,8 @@
         
         </div>
       </div>
+
+      <!-- Alerts -->
       <div 
         class="alert alert-danger" 
         role="alert" 
@@ -90,6 +110,8 @@
       >
         You're all caught up!. No more repos left.
       </div>
+
+      <!-- Spinner/Loader -->
       <div class="row pb-5">
         <div class="col-md-12 p-5">
           <ngx-spinner
