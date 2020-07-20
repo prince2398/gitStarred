@@ -1,10 +1,114 @@
-import { Component } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
+import { NgxSpinnerService } from "ngx-spinner";
+import { HttpClient } from "@angular/common/http";
+import { DatePipe } from "@angular/common";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'gitStarred';
+  url = "https://api.github.com/search/repositories"
+  date = new Date();
+  query = "sort:>0 created:>";
+  page = 1;
+  nextPage;
+  lastPage;
+  repos = [];
+
+  constructor(
+    private http:HttpClient, 
+    private spinner: NgxSpinnerService,
+    public datepipe: DatePipe
+  ) {}
+
+  ngOnInit(){
+    this.loadInitialRepos().then(res=>{
+      this.loadNextPage();
+    });
+  }
+
+  async loadInitialRepos(){
+    // Params
+    return new Promise( (resolve, reject)=>{
+      this.date.setDate(this.date.getDate()-30);
+      this.query = this.query + this.datepipe.transform(this.date, 'yyyy-MM-dd');
+      let params = { q: this.query,
+                      sort: "stars",
+                      per_page: "5",
+                      page: "1"
+      }
+      // getting initial repos
+      this.http.get(this.url,{params:params, observe: "response"})
+        .subscribe(
+          resp =>{
+            if(resp.status == 200){
+              this.appendRepos(resp.body["items"]);
+              this.updateLinks(resp.headers.get("link"))
+              resolve()
+            }
+          },
+          err=>{
+            console.log(err);
+            reject();
+          }
+        )
+    });
+  }
+  
+  loadNextPage(){
+    
+    if(this.nextPage){
+      // console.log(this.nextPage)
+      this.http.get(this.nextPage,{ observe: "response"})
+        .subscribe(
+          resp =>{
+            if(resp.status == 200){
+              // console.log(resp)
+              this.appendRepos(resp.body["items"]);
+              this.updateLinks(resp.headers.get("link"))
+            }
+          },
+          err=>{
+            console.log(err);
+          }
+        )
+    }
+  }
+  updateLinks(links){
+    links.split(',').forEach( link =>{
+      if(link.split(";")[1] == ' rel="next"'){
+        this.nextPage = link.split(";")[0].replace("<","").replace(">","");
+      }
+      if(link.split(";")[1] == ' rel="last"'){
+        this.lastPage = link.split(";")[0];
+      }
+    })
+  } 
+  appendRepos(items){
+    items.forEach(item=>{
+      let repo ={};
+      repo["name"] = item["name"];
+      repo["html_url"] = item["html_url"];
+      repo["desc"] = item["description"];
+      repo["created"] = new Date(item["created_at"]);
+      repo["stars"] = item["stargazers_count"];
+      repo["issues"] = item["open_issues"]
+      repo["ownerName"] = item["owner"]["login"];
+      repo["ownerAvatar"] = item["owner"]["avatar_url"];
+      repo["ownerProfile"] = item["owner"]["html_url"];
+      
+      this.repos.push(repo);
+      // console.log(repo);
+    })
+  }
+  onScroll(){
+    // this.repos.push(this.repos[this.repos.length-1] +1)
+    // console.log(this.repos)
+    // console.log(this.nextPage);
+    // console.log(this.lastPage);
+    this.loadNextPage();
+    this.spinner.show();
+  }
 }
