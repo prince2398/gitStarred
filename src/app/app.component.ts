@@ -61,6 +61,7 @@ export class AppComponent implements OnInit {
   }
   
   loadNextPage(){
+    
     if(this.nextPage && !this.noMoreRepos){
       this.http.get(this.nextPage,{ observe: "response"})
         .subscribe(
@@ -106,7 +107,8 @@ export class AppComponent implements OnInit {
       repo["ownerName"] = item["owner"]["login"];
       repo["ownerAvatar"] = item["owner"]["avatar_url"];
       repo["ownerProfile"] = item["owner"]["html_url"];
-      
+      repo["stars_url"] = repo["html_url"]+"/stargazers";
+      repo["issues_url"] = repo["html_url"]+"/issues";
       this.repos.push(repo);
     })
   }

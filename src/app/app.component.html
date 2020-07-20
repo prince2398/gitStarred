@@ -4,8 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    body{
+      background-color: #3E4551;
+    }
+    a{
+      text-decoration:none; 
+      color:inherit;
+    }
+    img{
+      max-height: 200px;
+    }
+  </style>
 </head>
-<body style="background-color: #3E4551;">
+<body>
   <div class="container">
     <div class="list-group" >
 
@@ -23,18 +35,20 @@
             <div class="grid">
               <div class="row">
                 <div class="col-md-2" style="text-align: center; padding-bottom:10px;">
-                    <img style="max-height: 200px;" src={{repo.ownerAvatar}} class="img-fluid" alt="avatar">
+                  <a href={{repo.ownerProfile}}>  
+                    <img src={{repo.ownerAvatar}} class="img-fluid" alt="avatar">
+                  </a>
                 </div>
                 <div class="col-md-10">
                   <div class="d-flex w-100 justify-content-between">
                     <div class="mb-1">
                       <h6>
-                        <a style="text-decoration:none; color:inherit;" href={{repo.ownerProfile}}>
+                        <a href={{repo.ownerProfile}}>
                           {{repo.ownerName}}
                         </a>
                       </h6>
                       <h5>
-                        <a style="text-decoration:none; color:inherit;" href={{repo.html_url}}>
+                        <a href={{repo.html_url}}>
                           {{repo.name}}
                         </a>
                       </h5>
@@ -45,11 +59,11 @@
                   <div class="d-flex w-100 justify-content-between">
                     <div class="mb-1">
                       <h6>
-                        &#9733; {{repo.stars}} 
+                        <a href={{repo.stars_url}}> &#9733; {{repo.stars}} </a>
                       </h6>
                     </div>
                     <h6>
-                      <b>!</b> {{repo.issues}} 
+                      <a href={{repo.issues_url}}> <b>!</b> {{repo.issues}} </a>
                     </h6>
                   </div>
                 </div>
