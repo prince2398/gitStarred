@@ -2,12 +2,15 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { NgxSpinnerService } from "ngx-spinner";
 import { HttpClient } from "@angular/common/http";
 import { DatePipe } from "@angular/common";
+import { faStar } from "@fortawesome/free-regular-svg-icons"
+import { faExclamationCircle, faChevronUp } from "@fortawesome/free-solid-svg-icons"
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  
   title = 'gitStarred';
   url = "https://api.github.com/search/repositories"
   date = new Date();
@@ -18,6 +21,10 @@ export class AppComponent implements OnInit {
   requestLimitReached = false;
   limitReset;
   noMoreRepos=false;
+  faStar = faStar;
+  faExclamationCircle = faExclamationCircle; 
+  faChevronUp = faChevronUp;
+
 
   constructor(
     private http:HttpClient, 
@@ -26,8 +33,16 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(){
+    this.spinner.show();
+
     this.loadInitialRepos().then(res=>{
+      this.spinner.hide();
       this.loadNextPage();
+    },
+    rej=>{
+      if(this.requestLimitReached){
+        this.spinner.hide();
+      }
     });
   }
 
@@ -126,7 +141,13 @@ export class AppComponent implements OnInit {
     }
   }
   toTop(){
-    document.body.scrollTop = document.documentElement.scrollTop = 0;
+    (function smoothscroll() {
+      var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      if (currentScroll > 0) {
+          window.requestAnimationFrame(smoothscroll);
+          window.scrollTo(0, currentScroll - (currentScroll / 8));
+      }
+    })();
   }
 
   timerUp(event){
@@ -136,7 +157,6 @@ export class AppComponent implements OnInit {
         this.onScroll();
       }else{
         window.location.reload()
-        // this.ngOnInit();
       }
       // console.log("Finished"); 
     }

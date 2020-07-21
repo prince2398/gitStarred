@@ -7,14 +7,14 @@
   <style>
     body{
       height: 100%;
-      background-color: #3E4551;
+      background-color: #585858;
     }
     .list-group{
       padding-top: 100px;
     }
     @media screen and (max-width: 677px) {
       .list-group{
-        padding-top: 190px;
+        padding-top: 150px;
       }
     }
     a{
@@ -84,11 +84,15 @@
                   <div class="d-flex w-100 justify-content-between">
                     <div class="mb-1">
                       <h6>
-                        <a href={{repo.stars_url}}> &#9733; {{repo.stars}} </a>
+                        <a href={{repo.stars_url}}> 
+                          <fa-icon [icon]="faStar"> </fa-icon> {{repo.stars}}
+                        </a>
                       </h6>
                     </div>
                     <h6>
-                      <a href={{repo.issues_url}}> <b>!</b> {{repo.issues}} </a>
+                      <a href={{repo.issues_url}}> 
+                        <fa-icon [icon]="faExclamationCircle"></fa-icon> {{repo.issues}} 
+                      </a>
                     </h6>
                   </div>
                 </div>
@@ -140,8 +144,8 @@
   </div>
   <!--Scroll to top-->
   <footer class="footer fixed-bottom">
-  <button id="scroll-to-top" class="btn btn-primary fixed md-raised md-primary" (click)="toTop()">
-    <b>&nbsp;^&nbsp;</b>
+  <button id="scroll-to-top" class="btn btn-dark fixed md-raised md-primary" (click)="toTop()">
+    <b><fa-icon [icon]="faChevronUp"> </fa-icon></b>
   </button>
 
   </footer>

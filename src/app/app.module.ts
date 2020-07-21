@@ -6,6 +6,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { AppComponent } from './app.component';
 import { DatePipe } from "@angular/common";
 import { CountdownModule } from "ngx-countdown";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -15,7 +17,8 @@ import { CountdownModule } from "ngx-countdown";
     InfiniteScrollModule,
     NgxSpinnerModule,
     HttpClientModule,
-    CountdownModule
+    CountdownModule,
+    FontAwesomeModule
   ],
   providers: [ 
     DatePipe 
