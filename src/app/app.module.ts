@@ -5,7 +5,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import { HttpClientModule } from "@angular/common/http";
 import { AppComponent } from './app.component';
 import { DatePipe } from "@angular/common";
-
+import { CountdownModule } from "ngx-countdown";
 @NgModule({
   declarations: [
     AppComponent
@@ -14,7 +14,8 @@ import { DatePipe } from "@angular/common";
     BrowserModule,
     InfiniteScrollModule,
     NgxSpinnerModule,
-    HttpClientModule
+    HttpClientModule,
+    CountdownModule
   ],
   providers: [ 
     DatePipe 

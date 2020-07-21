@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { NgxSpinnerService } from "ngx-spinner";
 import { HttpClient } from "@angular/common/http";
 import { DatePipe } from "@angular/common";
@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
   lastPage;
   repos = [];
   requestLimitReached = false;
+  limitReset;
   noMoreRepos=false;
 
   constructor(
@@ -52,7 +53,8 @@ export class AppComponent implements OnInit {
           },
           err=>{
             this.requestLimitReached = true;
-            console.log(err);
+            this.limitReset = err.headers.get("X-Ratelimit-Reset") + "000";
+            // console.log(err.headers.get("X-Ratelimit-Reset"));
             reject();
           }
         )
@@ -76,8 +78,10 @@ export class AppComponent implements OnInit {
           },
           err=>{
             this.requestLimitReached = true;
+            this.limitReset = err.headers.get("X-Ratelimit-Reset") + "000";
+            // console.log(err.headers.get("X-Ratelimit-Reset"));
             this.spinner.hide()
-            console.log(err);
+            // console.log(err);
           }
         )
     }
@@ -111,7 +115,32 @@ export class AppComponent implements OnInit {
       this.repos.push(repo);
     })
   }
+  @HostListener("window:scroll", []) onWindowScroll() {
+    this.scrollToTop();
+  }
+  scrollToTop(){
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        document.getElementById("scroll-to-top").style.display = "block";
+    } else {
+        document.getElementById("scroll-to-top").style.display = "none";
+    }
+  }
+  toTop(){
+    document.body.scrollTop = document.documentElement.scrollTop = 0;
+  }
 
+  timerUp(event){
+    if (event.action == "done") { 
+      this.requestLimitReached = false;
+      if ( this.nextPage){
+        this.onScroll();
+      }else{
+        window.location.reload()
+        // this.ngOnInit();
+      }
+      // console.log("Finished"); 
+    }
+  }
   onScroll(){
     if(!this.requestLimitReached && !this.noMoreRepos){
       this.loadNextPage();
@@ -120,4 +149,5 @@ export class AppComponent implements OnInit {
       this.spinner.hide();
     }
   }
+  
 }

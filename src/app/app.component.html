@@ -27,6 +27,13 @@
     p{
       padding-top:10px;
     }
+    #scroll-to-top {
+      display: none;
+      border-radius: 50%;
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+    }
   </style>
 </head>
 <body>
@@ -100,7 +107,10 @@
         style="text-align: center;"
         *ngIf="requestLimitReached"  
       >
-      Wohh! Wohh! Wohh! Slow down man. We're out of resources. Wait for a minute then refresh page and scroll slowly.
+      Wohh! Wohh! Wohh! Slow down man. Wait a minute. We're out of resources.
+      <b>
+        <countdown #cd [config]="{ stopTime: limitReset, format: 'mm:ss' }" (event)="timerUp($event)"></countdown>
+      </b>
       </div>
       <div 
         class="alert alert-danger" 
@@ -128,5 +138,13 @@
     </div>
     
   </div>
+  <!--Scroll to top-->
+  <footer class="footer fixed-bottom">
+  <button id="scroll-to-top" class="btn btn-primary fixed md-raised md-primary" (click)="toTop()">
+    <b>&nbsp;^&nbsp;</b>
+  </button>
+
+  </footer>
+  
 </body>
 </html>
