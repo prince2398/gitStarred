@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
       this.query = this.query + this.datepipe.transform(this.date, 'yyyy-MM-dd');
       let params = { q: this.query,
                       sort: "stars",
-                      per_page: "5",
+                      per_page: "10",
                       page: "1"
       }
       // getting initial repos
