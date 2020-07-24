@@ -1,0 +1,32 @@
+html {
+  height: 100%;
+}
+body {
+  min-height: 100vh;
+  background-color: #585858;
+}
+.list-group {
+  padding-top: 100px;
+}
+@media screen and (max-width: 677px) {
+  .list-group {
+    padding-top: 150px;
+  }
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+img {
+  max-height: 200px;
+}
+p {
+  padding-top: 10px;
+}
+#scroll-to-top {
+  display: none;
+  border-radius: 50%;
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+}

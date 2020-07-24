@@ -1,157 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>
-    html{
-      height: 100%;
-    }
-    body{
-      min-height: 100vh;
-      background-color: #585858;
-    }
-    .list-group{
-      padding-top: 100px;
-    }
-    @media screen and (max-width: 677px) {
-      .list-group{
-        padding-top: 150px;
-      }
-    }
-    a{
-      text-decoration:none; 
-      color:inherit;
-    }
-    img{
-      max-height: 200px;
-    }
-    p{
-      padding-top:10px;
-    }
-    #scroll-to-top {
-      display: none;
-      border-radius: 50%;
-      position: fixed;
-      bottom: 15px;
-      right: 15px;
-    }
-  </style>
-</head>
-<body>
-  <!-- Header -->
-  <div class="navbar fixed-top navbar-light bg-light">
-      <h5 class="navbar-brand">Most Stargazed Github Repos with Infinite Scrolling</h5>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Git Starred</title>
+  </head>
+  <body>
+    <!-- Header -->
+    <div class="navbar fixed-top navbar-light bg-light">
+      <h5 class="navbar-brand">
+        Most Stargazed Github Repos with Infinite Scrolling
+      </h5>
       <p>Made with &#10084; by PP</p>
-  </div>
+    </div>
 
-  <div class="container">
-    <div class="list-group" >
-      
-      <div
-        class="search-results"
-        infiniteScroll
-        [infiniteScrollDistance]="2"
-        [infiniteScrollThrottle]="50"
-        (scrolled)="onScroll()"
-      >
-        <div *ngFor="let repo of repos">
-          
-          <!-- Repository Row Start-->
-          <div class="list-group-item" style="margin-bottom: 10px;">
-            <div class="grid">
-              <div class="row">
-                <div class="col-md-2" style="text-align: center; padding-bottom:10px;">
-                  <a href={{repo.ownerProfile}}>  
-                    <img src={{repo.ownerAvatar}} class="img-fluid" alt="avatar">
-                  </a>
-                </div>
-                <div class="col-md-10">
-                  <div class="d-flex w-100 justify-content-between">
-                    <div class="mb-1">
-                      <h6>
-                        <a href={{repo.ownerProfile}}>
-                          {{repo.ownerName}}
-                        </a>
-                      </h6>
-                      <h5>
-                        <a href={{repo.html_url}}>
-                          {{repo.name}}
-                        </a>
-                      </h5>
-                    </div>
-                    <small>{{repo.created |date:'dd MMM, yyyy'}}</small>
+    <!-- Main -->
+    <div class="container">
+      <div class="list-group">
+        <div
+          class="search-results"
+          infiniteScroll
+          [infiniteScrollDistance]="2"
+          [infiniteScrollThrottle]="50"
+          (scrolled)="onScroll()"
+        >
+          <div *ngFor="let repo of repos">
+            <!-- Repository Row Start-->
+            <div class="list-group-item" style="margin-bottom: 10px;">
+              <div class="grid">
+                <div class="row">
+                  <div
+                    class="col-md-2"
+                    style="text-align: center; padding-bottom: 10px;"
+                  >
+                    <a href="{{ repo.ownerProfile }}" target="_blank">
+                      <img
+                        src="{{ repo.ownerAvatar }}"
+                        class="img-fluid"
+                        alt="avatar"
+                      />
+                    </a>
                   </div>
-                  <p class="mb-1">{{repo.desc}}</p>
-                  <div class="d-flex w-100 justify-content-between">
-                    <div class="mb-1">
+                  <div class="col-md-10">
+                    <div class="d-flex w-100 justify-content-between">
+                      <div class="mb-1">
+                        <h6>
+                          <a href="{{ repo.ownerProfile }}" target="_blank">
+                            {{ repo.ownerName }}
+                          </a>
+                        </h6>
+                        <h5>
+                          <a href="{{ repo.html_url }}" target="_blank">
+                            {{ repo.name }}
+                          </a>
+                        </h5>
+                      </div>
+                      <small>{{ repo.created | date: "dd MMM, yyyy" }}</small>
+                    </div>
+                    <p class="mb-1">{{ repo.desc }}</p>
+                    <div class="d-flex w-100 justify-content-between">
+                      <div class="mb-1">
+                        <h6>
+                          <a href="{{ repo.stars_url }}" target="_blank">
+                            <fa-icon [icon]="faStar"> </fa-icon>
+                            {{ repo.stars }}
+                          </a>
+                        </h6>
+                      </div>
                       <h6>
-                        <a href={{repo.stars_url}}> 
-                          <fa-icon [icon]="faStar"> </fa-icon> {{repo.stars}}
+                        <a href="{{ repo.issues_url }}" target="_blank">
+                          <fa-icon [icon]="faExclamationCircle"></fa-icon>
+                          {{ repo.issues }}
                         </a>
                       </h6>
                     </div>
-                    <h6>
-                      <a href={{repo.issues_url}}> 
-                        <fa-icon [icon]="faExclamationCircle"></fa-icon> {{repo.issues}} 
-                      </a>
-                    </h6>
                   </div>
                 </div>
               </div>
             </div>
+            <!-- Repository Row end-->
           </div>
-          <!-- Repository Row end-->
-        
         </div>
-      </div>
 
-      <!-- Alerts -->
-      <div 
-        class="alert alert-danger" 
-        role="alert" 
-        style="text-align: center;"
-        *ngIf="requestLimitReached"  
-      >
-      Wohh! Wohh! Wohh! Slow down man. Wait a minute. We're out of resources.
-      <b>
-        <countdown #cd [config]="{ stopTime: limitReset, format: 'mm:ss' }" (event)="timerUp($event)"></countdown>
-      </b>
-      </div>
-      <div 
-        class="alert alert-danger" 
-        role="alert" 
-        style="text-align: center;"
-        *ngIf="noMoreRepos"  
-      >
-        You're all caught up!. No more repos left.
-      </div>
+        <!-- Alerts -->
+        <div
+          class="alert alert-danger"
+          role="alert"
+          style="text-align: center;"
+          *ngIf="requestLimitReached"
+        >
+          Wohh! Wohh! Wohh! Slow down man. Wait a minute. We're out of
+          resources.
+          <b>
+            <countdown
+              #cd
+              [config]="{ stopTime: limitReset, format: 'mm:ss' }"
+              (event)="timerUp($event)"
+            ></countdown>
+          </b>
+        </div>
+        <div
+          class="alert alert-danger"
+          role="alert"
+          style="text-align: center;"
+          *ngIf="noMoreRepos"
+        >
+          You're all caught up!. No more repos left.
+        </div>
 
-      <!-- Spinner/Loader -->
-      <div class="row pb-5">
-        <div class="col-md-12 p-5">
-          <ngx-spinner
-          bdOpacity = 0.9
-          bdColor = ""
-          size = "default"
-          color = "#ffffff "
-          type = "ball-pulse-sync"
-          [fullScreen] = "false"
-          >
-          </ngx-spinner>
+        <!-- Spinner/Loader -->
+        <div class="row pb-5">
+          <div class="col-md-12 p-5">
+            <ngx-spinner
+              bdOpacity="0.9"
+              bdColor=""
+              size="default"
+              color="#ffffff "
+              type="ball-pulse-sync"
+              [fullScreen]="false"
+            >
+            </ngx-spinner>
+          </div>
         </div>
       </div>
     </div>
-    
-  </div>
-  <!--Scroll to top-->
-  <footer class="footer fixed-bottom">
-  <button id="scroll-to-top" class="btn btn-dark btn-lg fixed md-raised md-primary" (click)="toTop()">
-    <b><fa-icon [icon]="faChevronUp"> </fa-icon></b>
-  </button>
-
-  </footer>
-  
-</body>
+    <!--Scroll to top-->
+    <footer class="footer fixed-bottom">
+      <button
+        id="scroll-to-top"
+        class="btn btn-dark btn-lg fixed md-raised md-primary"
+        (click)="toTop()"
+      >
+        <b><fa-icon [icon]="faChevronUp"> </fa-icon></b>
+      </button>
+    </footer>
+  </body>
 </html>
